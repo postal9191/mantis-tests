@@ -9,6 +9,8 @@ import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
+
 public class SoapTests extends TestBase {
 
     @Test
@@ -27,5 +29,15 @@ public class SoapTests extends TestBase {
                 .withProject(projects.iterator().next());
         Issue created = app.soap().addIssue(issue);
         Assert.assertEquals(issue.getSummary(), created.getSummary());
+    }
+
+    @Test
+    public void testCreateIssueWithSkip() throws MalformedURLException, RemoteException, javax.xml.rpc.ServiceException {
+        skipIfNotFixed(2);
+        Set<Project> projects = app.soap().getProjects();
+        Issue issue = new Issue().withSummary("Bug report").withDescription("Description")
+                .withProject(projects.iterator().next());
+        Issue created = app.soap().addIssue(issue);
+        assertEquals(issue.getSummary(), created.getSummary());
     }
 }
